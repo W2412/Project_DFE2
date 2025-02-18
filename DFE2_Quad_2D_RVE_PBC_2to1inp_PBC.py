@@ -10,10 +10,10 @@ import numpy as np
 import math
 
 ### Update the following parameters
-os.chdir('C:\\temp\\DirectFE2\\Demo_Quad_2D') # directory where input files are, use double '\'
-MacroInpName = 'MACRO-2el.inp' # Name of macroscale input file
-RVEInpName = 'RVE_1_LAYER_20.inp' # Name of RVE input file 
-NewInpName = 'DFE2_2D_Test_ACTIVE.inp' # Name of new Direct FE2 input file
+os.chdir('C:\\temp\\DirectFE2\\DFE2_FOLDER') # directory where input files are, use double '\'
+MacroInpName = 'MACRO_FINAL.inp' # Name of macroscale input file
+RVEInpName = 'RVE_CARBON_PEEK_VF_0_7.inp' # Name of RVE input file 
+NewInpName = 'DFE2_2D_E1_CF_PEEK.inp' # Name of new Direct FE2 input file
 
 GP = [[-3**-0.5,-3**-0.5],[3**-0.5,-3**-0.5],[3**-0.5,3**-0.5],[-3**-0.5,3**-0.5]]
 

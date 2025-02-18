@@ -32,10 +32,10 @@ import connectorBehavior
 #****************************************************
 # CREATE MATRIX AND FIBRE MATERIALS/SECTIONS HERE
 #****************************************************
-mdb.models['Model-1'].Material(name='EPOXY')
-mdb.models['Model-1'].Material(name='EGLASS')
-mdb.models['Model-1'].HomogeneousSolidSection(name='matrixSection', material='EPOXY', thickness=None)
-mdb.models['Model-1'].HomogeneousSolidSection(name='fibreSection', material='EGLASS', thickness=None)
+mdb.models['Model-1'].Material(name='CARBON')
+mdb.models['Model-1'].Material(name='PEEK')
+mdb.models['Model-1'].HomogeneousSolidSection(name='matrixSection', material='PEEK', thickness=None)
+mdb.models['Model-1'].HomogeneousSolidSection(name='fibreSection', material='CARBON', thickness=None)
 
 # Create Viewport
 session.viewports['Viewport: 1'].partDisplay.setValues(mesh=OFF)
@@ -65,8 +65,8 @@ def generate_non_overlapping_rectangles(s, x_bounds, y_bounds, width_mean, width
         attempts = 0
         while attempts < max_attempts_per_rectangle:
             # Generate width and height with realistic constraints
-            width_T = max(0.0005, min(random.normalvariate(width_mean, width_std), (x_bounds[1] - x_bounds[0]) / 2))
-            height_T = max(0.0001, min(random.normalvariate(height_mean, height_std), (y_bounds[1] - y_bounds[0]) / 2))
+            width_T = random.normalvariate(width_mean, width_std)
+            height_T = random.normalvariate(height_mean, height_std)
 
             # Generate x1, y1 ensuring space for width and height
             x1 = random.uniform(x_bounds[0] + gap, x_bounds[1] - gap - width_T)
@@ -82,12 +82,8 @@ def generate_non_overlapping_rectangles(s, x_bounds, y_bounds, width_mean, width
                 remaining_area = (Vf * total_domain_area) - total_area
                 rectangle_area = width_T * height_T
 
-                # Prevent exceeding Vf target
-                if remaining_area / total_domain_area < 0.05:
-                    break  # Exit if adding another rectangle is insignificant
-
                 if rectangle_area > remaining_area:
-                    width_T = max(0.0005, remaining_area / height_T)  # Adjust width
+                    width_T = remaining_area / height_T  # Adjust width
                     x2 = x1 + width_T
                     rectangle_area = width_T * height_T  # Recalculate area
 
@@ -101,21 +97,21 @@ def generate_non_overlapping_rectangles(s, x_bounds, y_bounds, width_mean, width
             attempts += 1
 
         max_total_attempts -= 1
-        if max_total_attempts <= 0:
+        if max_total_attempts <= 0: 
             print("Max attempts reached, stopping to prevent infinite loop.")
             break  # Stop if too many failed attempts
-
+    print(total_area/total_domain_area)
     return centers
 
 
 # Define bounds and parameters
-x_bounds = (-0.075, 0.075)
-y_bounds = (-0.025, 0.025)
-width_mean = 0.050
+x_bounds = (-0.095, 0.095)  # X-coordinate range
+y_bounds = (-0.095, 0.095)  # Y-coordinate range
+width_mean = 0.136
 width_std = 0.007  # Adjusted standard deviation
 height_mean = 0.0095
 height_std = 0.0001
-gap = 0.00095
+gap = 0.0095
 Vf = 0.2
 x = generate_non_overlapping_rectangles(s, x_bounds, y_bounds, width_mean, width_std, height_mean, height_std, gap, Vf)
 session.viewports['Viewport: 1'].setValues(displayedObject=s)
@@ -145,7 +141,7 @@ s1.setPrimaryObject(option=STANDALONE)
 session.viewports['Viewport: 1'].view.setValues(width=0.5, height=0.5)
 
 # Sketch RVE Rectangle
-s1.rectangle(point1=(-0.075, -0.025), point2=(0.075, 0.025))
+s1.rectangle(point1=(-0.095, -0.095), point2=(0.095, 0.095))
 
 # Name the part model and associate it
 p = mdb.models['Model-1'].Part(name='RVE2DMatrix', dimensionality=TWO_D_PLANAR, type=DEFORMABLE_BODY)
@@ -185,7 +181,7 @@ g, v, d, c = s.geometry, s.vertices, s.dimensions, s.constraints
 s.setPrimaryObject(option=SUPERIMPOSE)
 p = mdb.models['Model-1'].parts['RVE2DComposite']
 p.projectReferencesOntoSketch(sketch=s, filter=COPLANAR_EDGES)
-s.rectangle(point1=(-0.075, -0.025), point2=(0.075, 0.025))
+s.rectangle(point1=(-0.095, -0.095), point2=(0.095, 0.095))
 s.rectangle(point1=(-1440, -400), point2=(1440, 400))
 session.viewports['Viewport: 1'].view.fitView()
 p = mdb.models['Model-1'].parts['RVE2DComposite']
@@ -200,7 +196,7 @@ mdb.models['Aligned_ShortFibreComposite'].parts['RVE2DComposite'].SectionAssignm
     offsetField='', 
     offsetType=MIDDLE_SURFACE, 
     region=Region(
-        faces=mdb.models['Aligned_ShortFibreComposite'].parts['RVE2DComposite'].faces.findAt(((-0.074 , -0.024, 0.0),))
+        faces=mdb.models['Aligned_ShortFibreComposite'].parts['RVE2DComposite'].faces.findAt(((-0.094 , -0.094, 0.0),))
     ), 
     sectionName='matrixSection', 
     thicknessAssignment=FROM_SECTION
