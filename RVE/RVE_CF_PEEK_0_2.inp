@@ -919,4 +919,8 @@
 ** MATERIALS
 ** 
 *Material, name=CARBON
+*Elastic
+240000, 0.3
 *Material, name=PEEK
+*Elastic
+3720, 0.4

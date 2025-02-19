@@ -31,7 +31,7 @@ dis=numpy.zeros(1000)
 rad=9.5*(10**-3)/2  # radius of inclusion
 Max_iterations=2    # Set number of iterations
 
-max_incl = 91      # Set number of inclusions required
+max_incl = 101      # Set number of inclusions required
 
 for q in range (1,Max_iterations):
     # LET'S CREATE MODEL
@@ -92,19 +92,19 @@ for q in range (1,Max_iterations):
                     
 
     # LET'S CREATE MATERIAL-1 (MATRIX POLYMER)
-    mdb.models['Model-%d' %(q)].Material(name='Matrix')
-    mdb.models['Model-%d' %(q)].materials['Matrix'].Elastic(table=
+    mdb.models['Model-%d' %(q)].Material(name='PEEK')
+    mdb.models['Model-%d' %(q)].materials['PEEK'].Elastic(table=
         ((1e2, 0.47), ))
     
     # LET'S CREATE MATERIAL-2 (ELASTIC INCLUSION)
-    mdb.models['Model-%d' %(q)].Material(name='Elastic')
-    mdb.models['Model-%d' %(q)].materials['Elastic'].Elastic(table=
+    mdb.models['Model-%d' %(q)].Material(name='CARBON')
+    mdb.models['Model-%d' %(q)].materials['CARBON'].Elastic(table=
         ((1e3, 0.35), ))
         
     # LET'S CREATE SECTIONS    
-    mdb.models['Model-%d' %(q)].HomogeneousSolidSection(material='Matrix', name='Matrix', 
+    mdb.models['Model-%d' %(q)].HomogeneousSolidSection(material='PEEK', name='Matrix', 
         thickness=None)
-    mdb.models['Model-%d' %(q)].HomogeneousSolidSection(material='Elastic', name='Inclusion', 
+    mdb.models['Model-%d' %(q)].HomogeneousSolidSection(material='CARBON', name='Inclusion', 
         thickness=None)
 
     # LET'S ASSIGN SECTIONS
@@ -183,16 +183,4 @@ for q in range (1,Max_iterations):
         , name='H-Output-2', rebar=EXCLUDE, region=
         mdb.models['Model-%d' %(q)].rootAssembly.sets['BottomEdge'], sectionPoints=DEFAULT, 
         variables=('RF2',))
-     
-    #LET'S CREATE JOBS 
-    mdb.Job(atTime=None, contactPrint=OFF, description='', echoPrint=OFF, 
-        explicitPrecision=SINGLE, getMemoryFromAnalysis=True, historyPrint=OFF, 
-        memory=90, memoryUnits=PERCENTAGE, model='Model-%d' %(q), modelPrint=OFF, 
-        multiprocessingMode=DEFAULT, name='Job-%d' %(q) , nodalOutputPrecision=SINGLE, 
-        numCpus=1, queue=None, scratch='', type=ANALYSIS, userSubroutine='', 
-        waitHours=0, waitMinutes=0)
-    mdb.jobs['Job-%d' %(q)].writeInput()
-    mdb.jobs['Job-%d' %(q) ].submit(consistencyChecking=OFF)    
-    mdb.jobs['Job-%d' %(q) ].waitForCompletion()
-
 #Property of Not Real Engineering 

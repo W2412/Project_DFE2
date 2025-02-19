@@ -12,8 +12,8 @@ import math
 ### Update the following parameters
 os.chdir('C:\\temp\\DirectFE2\\DFE2_FOLDER') # directory where input files are, use double '\'
 MacroInpName = 'MACRO_FINAL.inp' # Name of macroscale input file
-RVEInpName = 'RVE_CARBON_PEEK_VF_0_7.inp' # Name of RVE input file 
-NewInpName = 'DFE2_2D_E1_CF_PEEK.inp' # Name of new Direct FE2 input file
+RVEInpName = 'RVE_CF_PEEK_23_020.inp' # Name of RVE input file 
+NewInpName = 'DFE2_2D_E2_CF_PEEK.inp' # Name of new Direct FE2 input file
 
 GP = [[-3**-0.5,-3**-0.5],[3**-0.5,-3**-0.5],[3**-0.5,3**-0.5],[-3**-0.5,3**-0.5]]
 
