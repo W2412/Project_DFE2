@@ -105,9 +105,9 @@ def generate_non_overlapping_rectangles(s, x_bounds, y_bounds, width_mean, width
 
 
 # Define bounds and parameters
-x_bounds = (-0.095, 0.095)  # X-coordinate range
-y_bounds = (-0.095, 0.095)  # Y-coordinate range
-width_mean = 0.136
+x_bounds = (-0.075, 0.075)  # X-coordinate range
+y_bounds = (-0.025, 0.025)  # Y-coordinate range
+width_mean = 0.045
 width_std = 0.007  # Adjusted standard deviation
 height_mean = 0.0095
 height_std = 0.0001
@@ -141,7 +141,7 @@ s1.setPrimaryObject(option=STANDALONE)
 session.viewports['Viewport: 1'].view.setValues(width=0.5, height=0.5)
 
 # Sketch RVE Rectangle
-s1.rectangle(point1=(-0.095, -0.095), point2=(0.095, 0.095))
+s1.rectangle(point1=(-0.075, -0.025), point2=(0.075, 0.025))
 
 # Name the part model and associate it
 p = mdb.models['Model-1'].Part(name='RVE2DMatrix', dimensionality=TWO_D_PLANAR, type=DEFORMABLE_BODY)
@@ -181,7 +181,7 @@ g, v, d, c = s.geometry, s.vertices, s.dimensions, s.constraints
 s.setPrimaryObject(option=SUPERIMPOSE)
 p = mdb.models['Model-1'].parts['RVE2DComposite']
 p.projectReferencesOntoSketch(sketch=s, filter=COPLANAR_EDGES)
-s.rectangle(point1=(-0.095, -0.095), point2=(0.095, 0.095))
+s.rectangle(point1=(-0.075, -0.025), point2=(0.075, 0.025))
 s.rectangle(point1=(-1440, -400), point2=(1440, 400))
 session.viewports['Viewport: 1'].view.fitView()
 p = mdb.models['Model-1'].parts['RVE2DComposite']
@@ -196,7 +196,7 @@ mdb.models['Aligned_ShortFibreComposite'].parts['RVE2DComposite'].SectionAssignm
     offsetField='', 
     offsetType=MIDDLE_SURFACE, 
     region=Region(
-        faces=mdb.models['Aligned_ShortFibreComposite'].parts['RVE2DComposite'].faces.findAt(((-0.094 , -0.094, 0.0),))
+        faces=mdb.models['Aligned_ShortFibreComposite'].parts['RVE2DComposite'].faces.findAt(((-0.074 , -0.024, 0.0),))
     ), 
     sectionName='matrixSection', 
     thicknessAssignment=FROM_SECTION
