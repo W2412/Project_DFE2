@@ -8,7 +8,7 @@ txt_file = "TEMP_CP_DFE2_23_X.txt"  # Replace with your file path
 df = pd.read_csv(txt_file, delim_whitespace=True, skiprows=2, header=None)
 
 # Optionally, set column names if needed.
-df.columns = ["Part_Instance", "Node_ID", "Attached_elements", "HFL_HFL1"]
+df.columns = ["Part_Instance", "Node_ID", "Attached_elements", "NT11"]
 
 # Define the output Excel file name
 excel_file = "CP23_X.xlsx"

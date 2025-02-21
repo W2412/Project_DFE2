@@ -96,10 +96,6 @@ def generate_non_overlapping_rectangles(s, x_bounds, y_bounds, width_mean, width
 
             attempts += 1
 
-        max_total_attempts -= 1
-        if max_total_attempts <= 0: 
-            print("Max attempts reached, stopping to prevent infinite loop.")
-            break  # Stop if too many failed attempts
     print(total_area/total_domain_area)
     return centers
 
@@ -107,8 +103,8 @@ def generate_non_overlapping_rectangles(s, x_bounds, y_bounds, width_mean, width
 # Define bounds and parameters
 x_bounds = (-0.075, 0.075)  # X-coordinate range
 y_bounds = (-0.025, 0.025)  # Y-coordinate range
-width_mean = 0.045
-width_std = 0.007  # Adjusted standard deviation
+width_mean = 0.068
+width_std = 0.001  # Adjusted standard deviation
 height_mean = 0.0095
 height_std = 0.0001
 gap = 0.0095
