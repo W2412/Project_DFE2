@@ -60,27 +60,49 @@ small_segment_count = 0
 y1 = y_min
 y2 = y_min + height
 for ly in range(layer):
-    x_offset = x_min 
-    for i in range(Number_large):  # Ensure we don't exceed 12.5 mm
-        # Large segment (Macro)
-        x_offset += width_large  
-        p.PartitionFaceByShortestPath(
-            faces=p.faces, 
-            point1=(x_offset, y1, 0.0),  
-            point2=(x_offset, y2, 0.0)
-        )
-
-        # Small segment (Interlayer)
-        if x_offset + width_small <= x_max:  # Only partition if it fits exactly
-            if i == Number_large-1:
-                continue
-            x_offset += width_small  
+    x_offset = x_min
+    if ly != (layer-1): 
+        for i in range(Number_large):  # Ensure we don't exceed 12.5 mm
+            # Large segment (Macro)
+            x_offset += width_large  
             p.PartitionFaceByShortestPath(
                 faces=p.faces, 
                 point1=(x_offset, y1, 0.0),  
                 point2=(x_offset, y2, 0.0)
             )
-            small_segment_count += 1  # Increment counter
+
+            # Small segment (Interlayer)
+            if x_offset + width_small <= x_max:  # Only partition if it fits exactly
+                if i == Number_large-1:
+                    continue
+                x_offset += width_small  
+                p.PartitionFaceByShortestPath(
+                    faces=p.faces, 
+                    point1=(x_offset, y1, 0.0),  
+                    point2=(x_offset, y2, 0.0)
+                )
+                small_segment_count += 1  # Increment counter
+    else:
+          for i in range(Number_large):  # Ensure we don't exceed 12.5 mm
+            # Large segment (Macro)
+            x_offset += width_large  
+            p.PartitionFaceByShortestPath(
+                faces=p.faces, 
+                point1=(x_offset, y1, 0.0),  
+                point2=(x_offset, y2+thickness_interlayer, 0.0)
+            )
+
+            # Small segment (Interlayer)
+            if x_offset + width_small <= x_max:  # Only partition if it fits exactly
+                if i == Number_large-1:
+                    continue
+                x_offset += width_small  
+                p.PartitionFaceByShortestPath(
+                    faces=p.faces, 
+                    point1=(x_offset, y1, 0.0),  
+                    point2=(x_offset, y2+thickness_interlayer, 0.0)
+                )
+                small_segment_count += 1  # Increment counter
     p.PartitionFaceByShortestPath(
             faces=p.faces, 
             point1=(x_min, y2, 0.0),  
@@ -134,10 +156,14 @@ for _ in range(layer):
     y += (height + thickness_interlayer)
 
 y = y_min + (height + (thickness_interlayer/2))
-for _ in range(layer-1):
+for ly in range(layer-1):
     positions_interlayer_y.append((0, y, 0))
     y += (height + thickness_interlayer)
-print(positions_interlayer_y)
+    if ly == layer-1:
+        x = x_offset + (width_large / 2)
+        for i in range(Number_large*2): # One extra macro section at the end
+            positions_interlayer.append((x, y_max-(thickness_interlayer/2), 0))  # Store (x, y, z) position
+            x += (width_large/2 + width_small/2) 
 
 # Assign Interlayer Section to closest faces
 for point in positions_interlayer:
@@ -173,19 +199,4 @@ for point in positions_interlayer_y:
         thicknessAssignment=FROM_SECTION
     )
 
-
-# # --------------------------------------
-# # Step 5: Create and Assign Mesh
-# # --------------------------------------
-# # Define mesh size
-# mesh_size = 0.02  # Set appropriate element size
-
-# # Seed the part with defined mesh size
-# p.seedPart(size=mesh_size, deviationFactor=0.1, minSizeFactor=0.1)
-
-# # Assign mesh controls
-# p.setMeshControls(regions=p.faces, elemShape=QUAD, technique=STRUCTURED)
-
-# # Generate mesh
-# p.generateMesh()
 
