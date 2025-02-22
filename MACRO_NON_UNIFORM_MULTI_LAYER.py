@@ -23,18 +23,18 @@ import connectorBehavior
 # Step 1: Create the Entire Macro
 # -------------------------------
 # Define key parameters
-Number_large = 20     # Total length of the structure
-height = 0.2          # Constant 
-layer = 4
-width_large = 0.6     # Large segment width (Macro)
-width_small = 0.04    # Small segment width (Interlayer)
+Number_large = 100           # Total length of the structure
+height = 0.16                # Constant 
+layer = 3
+width_large = 0.46            # Large segment width (Macro)
+width_small = 0.04           # Small segment width (Interlayer)
 thickness_interlayer = 0.04
 
 # Compute origin shift to center the macro
 x_min = -(Number_large*(width_large+width_small))/ 2    # Leftmost edge of the rectangle
-y_min = -((height+thickness_interlayer)*layer-thickness_interlayer) / 2                                     # Bottom edge of the rectangle
+y_min = -((height+thickness_interlayer)*layer) / 2                                     # Bottom edge of the rectangle
 x_max = (Number_large*(width_large+width_small))/ 2     # Rightmost edge of the rectangle
-y_max = ((height+thickness_interlayer)*layer-thickness_interlayer) / 2                                      # Top edge of the rectangle
+y_max = ((height+thickness_interlayer)*layer) / 2                                      # Top edge of the rectangle
 
 # Create a new model
 model_name = 'MacroModel'
@@ -72,7 +72,7 @@ for ly in range(layer):
 
         # Small segment (Interlayer)
         if x_offset + width_small <= x_max:  # Only partition if it fits exactly
-            if i == 19:
+            if i == Number_large-1:
                 continue
             x_offset += width_small  
             p.PartitionFaceByShortestPath(
@@ -81,12 +81,12 @@ for ly in range(layer):
                 point2=(x_offset, y2, 0.0)
             )
             small_segment_count += 1  # Increment counter
-    if ly != (layer-1):
-        p.PartitionFaceByShortestPath(
-                faces=p.faces, 
-                point1=(x_min, y2, 0.0),  
-                point2=(x_max, y2, 0.0)
-            )
+    p.PartitionFaceByShortestPath(
+            faces=p.faces, 
+            point1=(x_min, y2, 0.0),  
+            point2=(x_max, y2, 0.0)
+        )
+    if ly != layer-1:
         p.PartitionFaceByShortestPath(
                 faces=p.faces, 
                 point1=(x_min, y2+thickness_interlayer, 0.0),  
